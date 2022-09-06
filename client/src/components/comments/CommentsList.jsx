@@ -1,17 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Comment from "../comment/Comment";
 import './comments.css'
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Typography
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {Box, Typography} from "@mui/material";
 
 const CommentsList = ({comments}) => {
     return (
