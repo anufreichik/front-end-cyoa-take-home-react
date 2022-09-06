@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Home = () => {
     const [comments, setComments] = useState([]);
@@ -24,20 +25,22 @@ const Home = () => {
     const [notifications, setNotifications] = useState([]);
     const [open, setOpen] = useState(false);
     const [openNewCommentAlert, setOpenNewCommentAlert] = useState(false);
-
+    const [loading,setLoading]=useState(true);
 
     //get all comments
     const fetchComments = async () => {
+        setLoading(true);
         const res = await Api.get('/getComments');
         if (res) {
             res.sort((a, b) => b.id - a.id);//latest on top
             setComments(res);
         }
+        setLoading(false);
 
     }
 
-    const getCommentById=async (id)=>{
-        const res= await Api.post('/getComment', {id: id});
+    const getCommentById = async (id) => {
+        const res = await Api.post('/getComment', {id: id});
         return res;
 
     }
@@ -74,15 +77,15 @@ const Home = () => {
         setOpenNewCommentAlert(false);
     }
 
-    const handleNotificationsBadgeClick=async (e)=>{
+    const handleNotificationsBadgeClick = async (e) => {
         e.preventDefault();
-        if(notifications.length){
-           const newComments=[];
-            for(let el of notifications){
-                    let newCommentEntry = await getCommentById(el);
-                    newComments.push(newCommentEntry);
+        if (notifications.length) {
+            const newComments = [];
+            for (let el of notifications) {
+                let newCommentEntry = await getCommentById(el);
+                newComments.push(newCommentEntry);
             }
-            setComments([...newComments,...comments]);
+            setComments([...newComments, ...comments]);
             setNotifications([]);
         }
     }
@@ -99,26 +102,29 @@ const Home = () => {
         if (socket) {
             //listen to getNotification event from server and do action on trigger
             socket.on("getNotification", (data) => {
-                setNotifications(prev=>[...prev, data?.id]);
+                setNotifications(prev => [...prev, data?.id]);
                 setOpenNewCommentAlert(true);
             });
         }
 
     }, [socket]);
+
+
     return (
         <div className='container-home'>
             <Box display='flex' margin={1} justifyContent='flex-end' gap={2}>
 
-               {/*delete comments button and dialog*/}
-                <Tooltip title="Delete All Comments">
-                    <IconButton aria-label="delete all comments"
-                                color='primary'
-                                sx={{padding: 0}}
-                                onClick={() => setOpen(true)}
-                    >
-                        <DeleteOutlineIcon/>
-                    </IconButton>
-                </Tooltip>
+                {/*delete comments button and dialog*/}
+                {comments.length > 0 &&
+                    (<Tooltip title="Delete All Comments">
+                        <IconButton aria-label="delete all comments"
+                                    color='primary'
+                                    sx={{padding: 0}}
+                                    onClick={() => setOpen(true)}
+                        >
+                            <DeleteOutlineIcon/>
+                        </IconButton>
+                    </Tooltip>)}
                 <Dialog
                     open={open}
                     onClose={handleDeleteDialogClose}
@@ -142,27 +148,28 @@ const Home = () => {
 
                 {/*new comments badge button*/}
                 <Tooltip title="Load New Comments">
-                <Badge color="secondary" badgeContent={notifications.length} showZero >
-                    <IconButton aria-label="load new comments" onClick={handleNotificationsBadgeClick}
-                                color='primary'
-                                sx={{padding: 0}}
-                    >
-                    <ChatBubbleOutlineIcon color='primary'/>
-                    </IconButton>
-                </Badge>
+                    <Badge color="secondary" badgeContent={notifications.length} showZero>
+                        <IconButton aria-label="load new comments" onClick={handleNotificationsBadgeClick}
+                                    color='primary'
+                                    sx={{padding: 0}}
+                        >
+                            <ChatBubbleOutlineIcon color='primary'/>
+                        </IconButton>
+                    </Badge>
                 </Tooltip>
             </Box>
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={comments.length > 0 ? 3 : 12}>
-                    <CommentForm addComment={createComment}/>
+            {loading ?  <Box display='flex' justifyContent='center' ><CircularProgress/></Box> :
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={comments.length > 0 ? 3 : 12}>
+                        <CommentForm addComment={createComment}/>
+                    </Grid>
+                    <Grid item xs={12} md={comments.length > 0 ? 9 : 12}>
+                        <CommentsList comments={comments}/>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={comments.length > 0 ? 9 : 12}>
-                    <CommentsList comments={comments} />
-                </Grid>
-
-            </Grid>
-
-            <Snackbar open={openNewCommentAlert} autoHideDuration={5000} onClose={handleNewCommentAlertClose} anchorOrigin={{vertical:'top', horizontal:'right'}}>
+            }
+            <Snackbar open={openNewCommentAlert} autoHideDuration={5000} onClose={handleNewCommentAlertClose}
+                      anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
                 <Alert onClose={handleNewCommentAlertClose} severity="success" sx={{width: '100%'}}>
                     New Comment Posted!
                 </Alert>

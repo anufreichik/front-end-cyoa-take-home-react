@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Card, CardActions, CardContent, Typography} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import {formatDate} from "../../utils/DateUtil";
 const Comment = ({comment}) => {
     let navigate = useNavigate();
     const handleRedirect=()=>{
@@ -13,7 +14,7 @@ const Comment = ({comment}) => {
                     {comment.message}
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {`${comment.name} on ${comment.created}`}
+                    {`${comment.name} on ${formatDate(comment.created)}`}
                 </Typography>
             </CardContent>
             <CardActions>

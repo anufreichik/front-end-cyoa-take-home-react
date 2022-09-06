@@ -6,6 +6,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CircularProgress from '@mui/material/CircularProgress';
+import {formatDate} from "../../utils/DateUtil";
 
 const CommentDetails = () => {
     let params = useParams();
@@ -38,7 +39,7 @@ const CommentDetails = () => {
                                 </IconButton>
                             }
                             title={commentDetails?.name}
-                            subheader={commentDetails?.created}
+                            subheader={formatDate(commentDetails?.created)}
                         />
                         <CardContent>
                             <Typography variant="body2" color="text.secondary">

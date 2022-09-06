@@ -61,6 +61,12 @@ We recommend spending up to four hours on this assignment. If you don't get ever
 ### Run in Development
 
 ```
-$ npm install
+$ npm run install-client
 $ npm run dev
+```
+### Test
+
+```
+$ cd client
+$ npm run test
 ```

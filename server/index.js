@@ -45,6 +45,7 @@ app.post('/createComment', function(request, response) {
     response.send(result);
   });
 });
+
 //I changed it to be post since in client API get does not have body
 app.post('/getComment', function(request, response) {
   const { body } = request;
@@ -53,6 +54,15 @@ app.post('/getComment', function(request, response) {
     response.send(result);
   });
 });
+
+app.post('/getCommentsPaged', function(request, response) {
+  const { body } = request;
+  const { limit, offset } = body;
+  comment.getCommentsPaged(limit, offset).then(result => {
+    response.send(result);
+  });
+});
+
 
 app.get('/getComments', function(request, response) {
   comment.getComments().then(result => {
