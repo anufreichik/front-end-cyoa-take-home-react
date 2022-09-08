@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# Client part for Comments App Summary
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Application allows for user to create and view comments.
 
-## Available Scripts
+Initially when no comments exist, user presented with form to create new comment that takes whole width of screen in both desktop and small glass device.
 
-In the project directory, you can run:
+If any comments already created, user will be presented with comments list on left side and form for creation of new comments on right side for desktop, for small glass devices form will be always above comments list.
 
-### `npm start`
+Each comment card have info with comment data and details link, to reroute user to comment details page.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+User has ability to delete all comments, if any using icon button that will be present on top right side. Confirm message will appear to allow user to confirm or cancel action.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+If another user create new comment, all other users will be notified through alert window, in addition they will see count on badge icon will increase, indicating number of new comments. User can click on badge icon to load new comments.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## App architecture
 
-### `npm run build`
+### Routes
+Application has main layout route that has sub-routes for Home and Details pages. Home route is index(default) route.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Components
+Layout component has 3 sections Header, Main, Footer. Main section will have outlet(react-router-dom), where all child components will be placed.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Home component has CommentsList and CommentForm as children components, as well all callbacks implementation.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+CommentsList component has Comment component as child component.
 
-### `npm run eject`
+CommentDetails component is route that is linked from comment component.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Socket.io
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Real time notification implemented using Socket.io library.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Server socket set on initial component load in useEffect of Home component.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+CreateComment method will send(emit) notification to server(named as sendNotificationOnCreateComment) on successfully comment created result, where server is listening for this notification and on received will broadcast event to all users(getNotification). Home component has accordingly listener for getNotification, where on triggering will set alert box appear and add value for commentId to state variable.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
