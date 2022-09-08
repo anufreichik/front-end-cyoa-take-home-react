@@ -1,14 +1,14 @@
 # Client part for Comments App Summary
 
-Application allows for user to create and view comments.
+Application allows for user to create/delete all and view comments.
 
-Initially when no comments exist, user presented with form to create new comment that takes whole width of screen in both desktop and small glass device.
+Initially when no comments exist, user presented with the form to create new comment that takes whole width of screen in both desktop and small glass device.
 
 If any comments already created, user will be presented with comments list on left side and form for creation of new comments on right side for desktop, for small glass devices form will be always above comments list.
 
 Each comment card have info with comment data and details link, to reroute user to comment details page.
 
-User has ability to delete all comments, if any using icon button that will be present on top right side. Confirm message will appear to allow user to confirm or cancel action.
+User has ability to delete all comments, if any created, using icon button that will be present on top right side. Confirm message will appear to allow user to confirm or cancel action.
 
 If another user create new comment, all other users will be notified through alert window, in addition they will see count on badge icon will increase, indicating number of new comments. User can click on badge icon to load new comments.
 
